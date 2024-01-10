@@ -13,8 +13,50 @@ local BOARDS = {
 }
 
 local win_options = {
-  winblend = 10, winhighlight = "Normal:Normal,FloatBorder:FloatBorder"
+  winblend = 10,
+  winhighlight = "Normal:Normal,FloatBorder:FloatBorder"
 }
+
+function ConfirmationPopup(cb, content, layout)
+  local popup = Popup({
+    enter = true,
+    border = {
+      style = "single",
+      text = {
+        top = "Confirm",
+        top_align = "center",
+        bottom = "Press enter to confirm (esc to cancel)"
+      }
+    },
+    position = "50%",
+    size = {
+      width = "80%",
+      height = "30%"
+    },
+    buf_options = {
+      modifiable = false,
+      readonly = true
+    },
+    win_options = {
+      winhighlight = "Normal:Normal,FloatBorder:FloatBorder"
+    }
+  })
+
+  vim.api.nvim_buf_set_lines(popup.bufnr, 0, 1, false, content)
+
+  layout:hide()
+  popup:mount()
+
+  popup:map("n", "<CR>", function()
+    cb()
+    popup:unmount()
+    layout:show()
+  end, { noremap = true })
+  popup:map("n", "<Esc>", function()
+    popup:unmount()
+    layout:show()
+  end, { noremap = true })
+end
 
 function BuildHeader()
   local header = Popup({
@@ -73,7 +115,6 @@ local layout = Layout(
   }, { dir = "col" })
 )
 
-
 function UpdateLayout()
   layout:update(Layout.Box({
     Layout.Box(BuildHeader(), { size = "20%" }),
@@ -101,6 +142,13 @@ function FecharLayout()
   layout:unmount()
 end
 
+function TestarConfirmation()
+  ConfirmationPopup(function()
+    print('CONFIRMADO!!!')
+  end, { "TEXTO" }, layout)
+end
+
 vim.api.nvim_set_keymap("n", "<Esc>", ":lua FecharLayout()<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "1", ":lua SetBoard('BOARD1')<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "2", ":lua SetBoard('BOARD2')<CR>", { noremap = true })
+vim.api.nvim_set_keymap("n", "0", ":lua TestarConfirmation()<CR>", { noremap = true })
