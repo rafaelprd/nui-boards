@@ -23,9 +23,7 @@ function BuildHeader()
       style = "single",
       text = {
         top = "Boards",
-        top_align = "center",
-        bottom = "bottom?",
-        bottom_align = "center"
+        top_align = "center"
       }
     },
     win_options = win_options
@@ -52,9 +50,7 @@ function BuildCommands(content)
       style = "single",
       text = {
         top = "Commands",
-        top_align = "center",
-        bottom = "bottom?",
-        bottom_align = "center"
+        top_align = "center"
       }
     },
     win_options = win_options,
